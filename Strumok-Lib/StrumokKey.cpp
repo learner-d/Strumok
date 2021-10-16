@@ -10,7 +10,7 @@ namespace StrumokLib {
     {
         array<uint64_t>^ key = GetRandomKey(bit512);
         array<uint64_t>^ iv = GetRandomIv();
-        StrumokKey::StrumokKey(key, iv);
+        this->StrumokKey::StrumokKey(key, iv);
     }
     StrumokKey::StrumokKey(array<uint64_t>^ keyArr, array<uint64_t>^ iv)
     {
@@ -27,10 +27,13 @@ namespace StrumokLib {
             throw gcnew ArgumentOutOfRangeException(STRINGIFY(iv));
 
         m_keyArr = keyArr;
+        m_iv = iv;
     }
 
     array<uint64_t>^ StrumokKey::Key::get() {
-        return reinterpret_cast<array<uint64_t>^>(m_keyArr);
+        if(m_keyArr == nullptr)
+            return nullptr;
+        return reinterpret_cast<array<uint64_t>^>(m_keyArr->Clone());
     }
 
     int32_t StrumokKey::KeyBitLength::get() {
@@ -42,6 +45,8 @@ namespace StrumokLib {
     }
 
     array<uint64_t>^ StrumokKey::IV::get() {
+        if (m_iv == nullptr)
+            return nullptr;
         return reinterpret_cast<array<uint64_t>^>(m_iv->Clone());
     }
 
