@@ -20,10 +20,10 @@ namespace StrumokLib {
         if (keyArr->Length != 4 && keyArr->Length != 8)
             throw gcnew ArgumentOutOfRangeException(STRINGIFY(keyArr));
 
-        if (keyArr == nullptr)
+        if (iv == nullptr)
             throw gcnew ArgumentNullException(STRINGIFY(iv));
 
-        if (keyArr->Length != 4)
+        if (iv->Length != 4)
             throw gcnew ArgumentOutOfRangeException(STRINGIFY(iv));
 
         m_keyArr = keyArr;

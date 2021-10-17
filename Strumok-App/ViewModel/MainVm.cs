@@ -1,6 +1,8 @@
 ﻿using Microsoft.Win32;
 using Prism.Commands;
 using Prism.Mvvm;
+using Strumok_App.View;
+using Strumok_App.ViewModel;
 using StrumokLib;
 using System;
 using System.Collections.Generic;
@@ -21,7 +23,10 @@ namespace StrumokApp.ViewModel
             CheckFileExists = true
         };
 
+        protected readonly KeyInputVm keyInputVm = new KeyInputVm();
+
         public ICommand CryptCommand { get; }
+        public ICommand KeySetupCommand { get; }
         public ICommand SelectFileCommand {  get; }
 
         // Властивість "Ключ шифрування"
@@ -65,9 +70,23 @@ namespace StrumokApp.ViewModel
 
         public MainVm()
         {
-            //_strumokCrypter = new StrumokCrypter(_strumokKey);
+            keyInputVm.KeyApplied += OnKeyApplied;
+
             CryptCommand = new DelegateCommand(Crypt);
+            KeySetupCommand = new DelegateCommand(KeySetup);
             SelectFileCommand = new DelegateCommand(SelectFile);
+        }
+
+        protected void OnKeyApplied(ulong[] key, ulong[] iv)
+        {
+            try
+            {
+                _strumokKey = new StrumokKey(key, iv);
+            }
+            catch (ArgumentException arge)
+            {
+                Console.WriteLine($"exception: {arge}");
+            }
         }
 
         protected void Crypt()
@@ -77,6 +96,13 @@ namespace StrumokApp.ViewModel
                 CryptedText = _strumokCrypter.Crypt(Text);
             }
             //CryptedText = _strumokCrypter.Crypt(Text);
+        }
+
+        //protected readonly StrumokKeyInputWindow strumokKeyInputWindow = new StrumokKeyInputWindow();
+        protected void KeySetup()
+        {
+            StrumokKeyInputWindow strumokKeyInputWindow = new StrumokKeyInputWindow(keyInputVm);
+            strumokKeyInputWindow.ShowDialog();
         }
 
         /// <summary>

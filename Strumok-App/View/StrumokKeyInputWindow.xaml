@@ -1,0 +1,54 @@
+﻿<Window x:Class="Strumok_App.View.StrumokKeyInputWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:wpfx="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:myext="clr-namespace:Strumok_App.Extentions"
+        xmlns:local="clr-namespace:Strumok_App.View" xmlns:viewmodel="clr-namespace:Strumok_App.ViewModel"
+        mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=viewmodel:KeyInputVm, IsDesignTimeCreatable=True}"
+        Title="StrumokKeyInputWindow" Height="450" Width="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+            <ColumnDefinition />
+            <ColumnDefinition />
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="2*" />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition Height="2*" />
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="1" Grid.Column="1" Text="Ключ" FontSize="24" VerticalAlignment="Center"/>
+        <RadioButton Grid.Row="2" Grid.Column="1" GroupName="key-option" VerticalAlignment="Center" Content="Strumok-256" IsChecked="True"/>
+        <RadioButton Grid.Row="2" Grid.Column="2" GroupName="key-option" VerticalAlignment="Center" Content="Strumok-512" IsEnabled="False"/>
+        <myext:KeyInputTextBox Grid.Row="3" Grid.Column="1" Text="{Binding KeyPart1}"/>
+        <myext:KeyInputTextBox Grid.Row="3" Grid.Column="2" Text="{Binding KeyPart2}"/>
+        <myext:KeyInputTextBox Grid.Row="3" Grid.Column="3" Text="{Binding KeyPart3}"/>
+        <myext:KeyInputTextBox Grid.Row="3" Grid.Column="4" Text="{Binding KeyPart4}"/>
+        <myext:KeyInputTextBox Grid.Row="4" Grid.Column="1" Text="{Binding KeyPart5}"/>
+        <myext:KeyInputTextBox Grid.Row="4" Grid.Column="2" Text="{Binding KeyPart6}"/>
+        <myext:KeyInputTextBox Grid.Row="4" Grid.Column="3" Text="{Binding KeyPart7}"/>
+        <myext:KeyInputTextBox Grid.Row="4" Grid.Column="4" Text="{Binding KeyPart8}"/>
+        <TextBlock Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" Text="Вектор ініціалізації" VerticalAlignment="Center" FontSize="24"/>
+        <myext:KeyInputTextBox Grid.Row="6" Grid.Column="1" Text="{Binding IVPart1}"/>
+        <myext:KeyInputTextBox Grid.Row="6" Grid.Column="2" Text="{Binding IVPart2}"/>
+        <myext:KeyInputTextBox Grid.Row="6" Grid.Column="3" Text="{Binding IVPart3}"/>
+        <myext:KeyInputTextBox Grid.Row="6" Grid.Column="4" Text="{Binding IVPart4}"/>
+        <StackPanel Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="4" Orientation="Horizontal">
+            <Button Content="Застосувати" Command="{Binding ApplyKeyCommand}" Margin="0,3,5,3" Click="BtnApplyKey_Click"/>
+            <Button Content="Випадковий ключ" Command="{Binding RandomKeyCommand}" Margin="5,3"/>
+            <Button Content="Завантажити з файлу" Margin="5,3"/>
+            <Button Content="Зберегти до файлу" Margin="5,3"/>
+        </StackPanel>
+    </Grid>
+</Window>
