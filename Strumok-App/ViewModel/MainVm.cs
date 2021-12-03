@@ -41,26 +41,17 @@ namespace StrumokApp.ViewModel
 
         // Властивість "Ключ шифрування"
         protected ulong[] _strumokKey = new ulong[4];
-        protected ulong[] StrumokKey { 
+        public ulong[] StrumokKey {
             get => _strumokKey;
-            set { 
-                _strumokKey = value;
-                // TODO: Remove
-                //RaisePropertyChanged(nameof(EncryptionKeyStr));
-            }
+            set => SetProperty(ref _strumokKey, value);
         }
 
         // Властивість "Вектор ініціалізації"
         protected ulong[] _strumokIv = new ulong[4];
-        protected ulong[] StrumokIv
+        public ulong[] StrumokIv
         {
             get => _strumokIv;
-            set
-            {
-                _strumokIv = value;
-                // TODO: Remove
-                //RaisePropertyChanged(nameof(EncryptionKeyStr));
-            }
+            set => SetProperty(ref _strumokIv, value);
         }
 
         public string Text { get; set; }
@@ -81,16 +72,6 @@ namespace StrumokApp.ViewModel
             set => SetProperty(ref _sourceFilePath, value);
         }
 
-        public string EncryptionKeyStr
-        {   
-            get
-            {
-                if (_strumokKey == null)
-                    return "";
-                return _strumokKey.ToString();
-            } 
-        }
-
         public MainVm()
         {
             keyInputVm.KeyApplied += OnKeyApplied;
@@ -102,8 +83,8 @@ namespace StrumokApp.ViewModel
 
         protected void OnKeyApplied(ulong[] key, ulong[] iv)
         {
-            _strumokKey = key;
-            _strumokIv = iv;
+            StrumokKey = key;
+            StrumokIv = iv;
         }
 
         protected void Crypt()

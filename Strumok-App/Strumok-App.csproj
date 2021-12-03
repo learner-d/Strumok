@@ -65,6 +65,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Binding\ArrULongToHexConverter.cs" />
     <Compile Include="Binding\StrumokKeyConverter.cs" />
     <Compile Include="Binding\StrumokKeyShortConverter.cs" />
     <Compile Include="Extentions\KeyInputTextBox.cs" />

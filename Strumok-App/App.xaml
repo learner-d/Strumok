@@ -2,9 +2,10 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:StrumokApp"
+             xmlns:bnd="clr-namespace:StrumokApp.Binding"
              StartupUri="MainWindow.xaml"
              DispatcherUnhandledException="StrumokApp_DispatcherUnhandledException">
     <Application.Resources>
-         
+        <bnd:ArrULongToHexConverter x:Key="arrULArrToStrConv"/>
     </Application.Resources>
 </Application>

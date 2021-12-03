@@ -73,10 +73,9 @@
             </TabItem>
         </TabControl>
         <Label Grid.Row="3" Grid.Column="0" Content="Вектор ініціалізії" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="14"/>
-        <TextBox Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" IsReadOnly="True" Text=""/>
-        <Button Grid.Row="3" Grid.Column="3" Content="Змінити" Command="{Binding KeySetupCommand}"/>
+        <TextBox Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" IsReadOnly="True" Text="{Binding StrumokIv, Converter={StaticResource arrULArrToStrConv}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <Button Grid.Row="3" Grid.RowSpan="2" Grid.Column="3" Content="Редагувати ключ" Command="{Binding KeySetupCommand}"/>
         <Label Grid.Row="4" Grid.Column="0" Content="Ключ" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="14"/>
-        <TextBox Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" IsReadOnly="True" Text="{Binding EncryptionKeyStr, Mode=OneWay}"/>
-        <Button Grid.Row="4" Grid.Column="3" Content="Змінити" />
+        <TextBox Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" IsReadOnly="True" Text="{Binding StrumokKey, Converter={StaticResource arrULArrToStrConv}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
     </Grid>
 </Window>
