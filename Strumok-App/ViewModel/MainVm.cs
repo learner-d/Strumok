@@ -1,19 +1,23 @@
 ﻿using Microsoft.Win32;
 using Prism.Commands;
 using Prism.Mvvm;
+using Strumok_App.Util;
 using Strumok_App.View;
 using Strumok_App.ViewModel;
 using StrumokLib;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace StrumokApp.ViewModel
 {
+    enum eCryptMode { None, Text, File };
     internal class MainVm : BindableBase
     {
         // Діалог вибору файлу для шифрування
@@ -26,17 +30,36 @@ namespace StrumokApp.ViewModel
         protected readonly KeyInputVm keyInputVm = new KeyInputVm();
 
         public ICommand CryptCommand { get; }
+        //public ICommand CryptFileCommand { get; }
         public ICommand KeySetupCommand { get; }
         public ICommand SelectFileCommand {  get; }
 
+        public eCryptMode CryptMode => TextCryptMode ? eCryptMode.Text : FileCryptMode ? eCryptMode.File : eCryptMode.None;
+
+        public bool TextCryptMode { get; set; } = true;
+        public bool FileCryptMode { get; set; } = false;
+
         // Властивість "Ключ шифрування"
-        protected StrumokKey _strumokKey = new StrumokKey();
-        protected StrumokKey StrumokKey { 
+        protected ulong[] _strumokKey = new ulong[4];
+        protected ulong[] StrumokKey { 
             get => _strumokKey;
             set { 
                 _strumokKey = value;
                 // TODO: Remove
-                RaisePropertyChanged(nameof(EncryptionKeyStr));
+                //RaisePropertyChanged(nameof(EncryptionKeyStr));
+            }
+        }
+
+        // Властивість "Вектор ініціалізації"
+        protected ulong[] _strumokIv = new ulong[4];
+        protected ulong[] StrumokIv
+        {
+            get => _strumokIv;
+            set
+            {
+                _strumokIv = value;
+                // TODO: Remove
+                //RaisePropertyChanged(nameof(EncryptionKeyStr));
             }
         }
 
@@ -64,7 +87,7 @@ namespace StrumokApp.ViewModel
             {
                 if (_strumokKey == null)
                     return "";
-                return _strumokKey.Key.ToString();
+                return _strumokKey.ToString();
             } 
         }
 
@@ -79,23 +102,76 @@ namespace StrumokApp.ViewModel
 
         protected void OnKeyApplied(ulong[] key, ulong[] iv)
         {
-            try
-            {
-                _strumokKey = new StrumokKey(key, iv);
-            }
-            catch (ArgumentException arge)
-            {
-                Console.WriteLine($"exception: {arge}");
-            }
+            _strumokKey = key;
+            _strumokIv = iv;
         }
 
         protected void Crypt()
         {
-            using (StrumokCrypter _strumokCrypter = new StrumokCrypter(_strumokKey))
+            switch (CryptMode)
+            {
+                case eCryptMode.Text:
+                    CryptText();
+                    break;
+                case eCryptMode.File:
+                    CryptFile();
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        protected void CryptText()
+        {
+            if (Text == null)
+                return;
+            using (StrumokCrypter _strumokCrypter = new StrumokCrypter(_strumokKey, _strumokIv))
             {
                 CryptedText = _strumokCrypter.Crypt(Text);
             }
             //CryptedText = _strumokCrypter.Crypt(Text);
+        }
+
+        protected void CryptFile()
+        {
+            // Перевірити шлях
+            if (!File.Exists(SourceFilePath))
+            {
+                WarningMessageBox("Помилка: файл не існує", "");
+                return;
+            }
+            try
+            {
+                byte[] buffer, output = null;
+                string destinationPath = destinationPath = ExplorerUtils.ShowSaveFileDialog();
+                if (string.IsNullOrEmpty(destinationPath))
+                    return;
+                using (Stream outputStream = new FileStream(destinationPath, FileMode.Create, FileAccess.Write, FileShare.Read))
+                {
+                    using (Stream stream = new FileStream(SourceFilePath, FileMode.Open))
+                    {
+                        // Прочитати файл
+                        buffer = new byte[stream.Length];
+                        stream.Read(buffer, 0, buffer.Length);
+                    }
+                    // Шифрувати вміст
+                    using (StrumokCrypter crypter = new StrumokCrypter(_strumokKey, _strumokIv))
+                    {
+                        output = crypter.Crypt(buffer);
+                    }
+                    // Записати до кінцевого файлу
+                    outputStream.Write(output, 0, output.Length);
+                }
+            }
+            catch (IOException)
+            {
+                WarningMessageBox("Не вдалося прочитати файл. Кинуто IOException");
+            }
+        }
+
+        private static void WarningMessageBox(string text, string caption = "")
+        {
+            MessageBox.Show(text, caption, MessageBoxButton.OK, MessageBoxImage.Warning);
         }
 
         //protected readonly StrumokKeyInputWindow strumokKeyInputWindow = new StrumokKeyInputWindow();

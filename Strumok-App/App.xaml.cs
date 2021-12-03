@@ -13,5 +13,15 @@ namespace StrumokApp
     /// </summary>
     public partial class App : Application
     {
+        private void StrumokApp_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        {
+            e.Handled = true;
+            MessageBoxResult mbResult = MessageBox.Show($"Збій в програмі. Рекомендовано закрити застосунок.\n{e.Exception}",
+                "Закрити застосунок?", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            if (mbResult == MessageBoxResult.Yes)
+            {
+                Shutdown();
+            }
+        }
     }
 }

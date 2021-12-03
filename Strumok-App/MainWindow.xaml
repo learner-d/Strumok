@@ -16,6 +16,7 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="14*"/>
             <RowDefinition Height="2*"/>
+            <RowDefinition Height="2*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
@@ -26,42 +27,56 @@
         <Image Grid.Row="0" Grid.ColumnSpan="4" Source="/Img/Ukraine-coat_of_arms-128.png"/>
         <TextBlock Grid.Row="1" Grid.ColumnSpan="4" Text="ДСТУ 8845:2019" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         <TabControl Grid.Row="2" Grid.ColumnSpan="4">
-            <TabItem Header="Текст">
+            <TabItem x:Name="tbiCryptText" Header="Текст" IsSelected="{Binding TextCryptMode, Mode=OneWayToSource}">
                 <Grid>
                     <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="2*"/>
                         <RowDefinition Height="12*"/>
+                        <RowDefinition Height="2*"/>
                     </Grid.RowDefinitions>
-                    <Label Grid.Row="0" Grid.Column="0" Content="Текст" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    <Label Grid.Row="0" Grid.Column="1" Content="Шифротекст" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    <TextBox Grid.Row="1" Grid.Column="0" Text="{Binding Text}"/>
-                    <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding CryptedText}" IsReadOnly="True"/>
+                    <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Content="Текст" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <TextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Text="{Binding Text}"/>
+                    <Label Grid.Row="0" Grid.Column="3" Grid.ColumnSpan="3" Content="Шифротекст" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <TextBox Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="3" Text="{Binding CryptedText}" IsReadOnly="True"/>
+                    <Button Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2" Content="Шифрувати" Command="{Binding CryptCommand}"/>
                 </Grid>
             </TabItem>
-            <TabItem Header="Файл">
+            <TabItem x:Name="tbiCryptFile" Header="Файл" IsSelected="{Binding FileCryptMode, Mode=OneWayToSource}">
                 <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition/>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="2*"/>
                         <RowDefinition Height="2*"/>
                         <RowDefinition Height="8*"/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
                         <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <Label Content="Файл"/>
-                    <TextBox Grid.Row="1" IsReadOnly="True" Text="{Binding SourceFilePath}"/>
-                    <Button Grid.Column="1" Grid.Row="1" Content="..." Command="{Binding SelectFileCommand}"/>
+                    <TextBox Grid.Row="1" Grid.ColumnSpan="4" IsReadOnly="True" Text="{Binding SourceFilePath}"/>
+                    <Button Grid.Row="1" Grid.Column="4" Grid.ColumnSpan="2" Content="..." Command="{Binding SelectFileCommand}"/>
+                    <Button Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2" Content="Шифрувати файл" Command="{Binding CryptFileCommand}"/>
                 </Grid>
             </TabItem>
         </TabControl>
-        <Label Grid.Row="3" Grid.Column="0" Content="Ключ" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="14"/>
-        <TextBox Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="1" IsReadOnly="True" Text="{Binding EncryptionKeyStr, Mode=OneWay}"/>
-        <Button Grid.Row="3" Grid.Column="2" Content="Установити ключ" Command="{Binding KeySetupCommand}"/>
-        <Button Grid.Row="3" Grid.Column="3" Content="Шифрувати" Command="{Binding CryptCommand}"/>
+        <Label Grid.Row="3" Grid.Column="0" Content="Вектор ініціалізії" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="14"/>
+        <TextBox Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" IsReadOnly="True" Text=""/>
+        <Button Grid.Row="3" Grid.Column="3" Content="Змінити" Command="{Binding KeySetupCommand}"/>
+        <Label Grid.Row="4" Grid.Column="0" Content="Ключ" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="14"/>
+        <TextBox Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" IsReadOnly="True" Text="{Binding EncryptionKeyStr, Mode=OneWay}"/>
+        <Button Grid.Row="4" Grid.Column="3" Content="Змінити" />
     </Grid>
 </Window>

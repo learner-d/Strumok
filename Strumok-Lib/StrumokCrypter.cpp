@@ -1,21 +1,22 @@
 #include "pch.h"
 #include "StrumokCrypter.h"
+
 #include "strumok-dstu8845/strumok.h"
 
 using namespace System::Text;
 
 namespace StrumokLib {
-    StrumokCrypter::StrumokCrypter(StrumokKey^ key)
+    StrumokCrypter::StrumokCrypter(array<uint64_t>^ key, array<uint64_t>^ iv)
     {
         if (key == nullptr)
             throw gcnew System::ArgumentNullException(STRINGIFY(key));
         
         m_pCtx = dstu8845_alloc();
 
-        pin_ptr<uint64_t> pkey = &key->Key[0];
-        pin_ptr<uint64_t> pIv =  &key->IV[0];
+        pin_ptr<uint64_t> pkey = &key[0];
+        pin_ptr<uint64_t> pIv =  &iv[0];
 
-        dstu8845_init(m_pCtx, pkey, key->KeyByteLength, pIv);
+        dstu8845_init(m_pCtx, pkey, sizeof(uint64_t) * key->Length, pIv);
     }
 
     StrumokCrypter::!StrumokCrypter()

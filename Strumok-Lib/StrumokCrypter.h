@@ -6,7 +6,7 @@ namespace StrumokLib {
 	public ref class StrumokCrypter
 	{
 	public:
-		StrumokCrypter(StrumokKey^ key);
+		StrumokCrypter(array<uint64_t>^ key, array<uint64_t>^ iv);
 		!StrumokCrypter();
 		~StrumokCrypter();
 
