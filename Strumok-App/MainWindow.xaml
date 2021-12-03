@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:StrumokApp"
         xmlns:vm="clr-namespace:StrumokApp.ViewModel"
+        xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Window.DataContext>
@@ -80,6 +81,7 @@
         <TextBox Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" IsReadOnly="True"
                  Text="{Binding StrumokIv, Converter={StaticResource strumokKeyConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                  ScrollViewer.HorizontalScrollBarVisibility="Auto"/>
-        <Button Grid.Row="3" Grid.RowSpan="2" Grid.Column="3" Content="Редагувати ключ" Command="{Binding KeySetupCommand}"/>
+        <Button Grid.Row="3" Grid.RowSpan="2" Grid.Column="3" Content="Редагувати ключ" Command="{Binding KeySetupCommand}"
+                Margin="0"/>
     </Grid>
 </Window>

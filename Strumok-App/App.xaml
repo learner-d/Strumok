@@ -6,9 +6,17 @@
              StartupUri="MainWindow.xaml"
              DispatcherUnhandledException="StrumokApp_DispatcherUnhandledException">
     <Application.Resources>
-        <BooleanToVisibilityConverter x:Key="boolToVisibilityConverter"/>
-        <bnd:ArrULongToHexConverter x:Key="arrULArrToStrConv"/>
-        <bnd:KeyPartConverter x:Key="keyPartConverter"/>
-        <bnd:StrumokKeyConverter x:Key="strumokKeyConverter"/>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!--<ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.DeepPurple.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.Lime.xaml" />-->
+            </ResourceDictionary.MergedDictionaries>
+            <BooleanToVisibilityConverter x:Key="boolToVisibilityConverter"/>
+            <bnd:ArrULongToHexConverter x:Key="arrULArrToStrConv"/>
+            <bnd:KeyPartConverter x:Key="keyPartConverter"/>
+            <bnd:StrumokKeyConverter x:Key="strumokKeyConverter"/>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>
