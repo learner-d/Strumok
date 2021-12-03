@@ -7,45 +7,28 @@ using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Globalization;
 
-namespace Strumok_App.Binding
+namespace StrumokApp.Binding
 {
     public class StrumokKeyConverter : IValueConverter
     {
+        private static readonly KeyPartConverter _s_keyPartConverter = new KeyPartConverter();
+        // ulong[] to string
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return null;
+            if (value == null)
+                return null;
+            if (targetType != typeof(string))
+                throw new ArgumentException(nameof(targetType));
+            if (!(value is ulong[] valULArray))
+                throw new ArgumentException(nameof(value));
+
+            return string.Join("-", valULArray.Select(valUL => _s_keyPartConverter.Convert(valUL, targetType, parameter, culture)));
         }
+
+        // string to ulong[]
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return null;
-        }
-
-        readonly Regex regex = new Regex(@"([\dA-F]{1,4})-([\dA-F]{1,4})-([\dA-F]{1,4})-([\dA-F]{1,4})", RegexOptions.IgnoreCase | RegexOptions.Compiled);
-        public ulong[] ConvertBack(string[] keyParts)
-        {
-            if (keyParts == null)
-                throw new ArgumentNullException(nameof(keyParts));
-            if (keyParts.Length != 4 && keyParts.Length != 8)
-                throw new ArgumentOutOfRangeException(nameof(keyParts));
-
-            ulong[] result = new ulong[keyParts.Length];
-
-            for (int i = 0; i < keyParts.Length; i++)
-            {
-                Match match = regex.Match(keyParts[i]);
-                if (!match.Success)
-                    return null;
-
-                ulong value = 0;
-                for (int j = 1; j < match.Groups.Count; j++)
-                {
-                    ushort val = ushort.Parse(match.Groups[j].Value, NumberStyles.HexNumber);
-                    value |= ((ulong)val << 64 - (j+1) * 16);
-                }
-
-                result[i] = value;
-            }
-            return result;
+            throw new NotImplementedException();
         }
     }
 }

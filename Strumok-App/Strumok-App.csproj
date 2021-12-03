@@ -66,8 +66,8 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Binding\ArrULongToHexConverter.cs" />
+    <Compile Include="Binding\KeyPartConverter.cs" />
     <Compile Include="Binding\StrumokKeyConverter.cs" />
-    <Compile Include="Binding\StrumokKeyShortConverter.cs" />
     <Compile Include="Extentions\KeyInputTextBox.cs" />
     <Compile Include="Util\ArgumentUtils.cs" />
     <Compile Include="Util\ExplorerUtils.cs" />

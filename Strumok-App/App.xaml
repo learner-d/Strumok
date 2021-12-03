@@ -6,6 +6,9 @@
              StartupUri="MainWindow.xaml"
              DispatcherUnhandledException="StrumokApp_DispatcherUnhandledException">
     <Application.Resources>
+        <BooleanToVisibilityConverter x:Key="boolToVisibilityConverter"/>
         <bnd:ArrULongToHexConverter x:Key="arrULArrToStrConv"/>
+        <bnd:KeyPartConverter x:Key="keyPartConverter"/>
+        <bnd:StrumokKeyConverter x:Key="strumokKeyConverter"/>
     </Application.Resources>
 </Application>
