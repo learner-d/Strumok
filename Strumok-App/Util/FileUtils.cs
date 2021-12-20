@@ -4,7 +4,7 @@ using System.Security.AccessControl;
 using System.Security.Principal;
 using System.Linq;
 
-namespace Strumok_App.Util
+namespace StrumokApp.Util
 {
     public static class FileUtils
     {

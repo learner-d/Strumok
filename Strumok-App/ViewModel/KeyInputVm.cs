@@ -2,30 +2,30 @@
 using System.Windows.Input;
 using Prism.Commands;
 using Prism.Mvvm;
+using Newtonsoft.Json;
+using StrumokApp.Util;
+using System.IO;
+using System.Linq;
+using StrumokApp.Data;
 
-namespace Strumok_App.ViewModel
+namespace StrumokApp.ViewModel
 {
     public class KeyInputVm : BindableBase
     {
         protected readonly Random random = new Random();
-        private ulong keyPart1 = 0;
-        private ulong keyPart2 = 0;
-        private ulong keyPart3 = 0;
-        private ulong keyPart4 = 0;
-        private ulong keyPart5 = 0;
-        private ulong keyPart6 = 0;
-        private ulong keyPart7 = 0;
-        private ulong keyPart8 = 0;
-        private ulong iVPart1 = 0;
-        private ulong iVPart2 = 0;
-        private ulong iVPart3 = 0;
-        private ulong iVPart4 = 0;
+        private StrumokKeyConfiguration keyConfiguration;
 
         protected bool _isStrumok256 = true;
         public bool IsStrumok256
         {
             get => _isStrumok256;
-            set => SetProperty(ref _isStrumok256, value);
+            set
+            {
+                if (value == _isStrumok256)
+                    return;
+                SetProperty(ref _isStrumok256, value);
+                IsStrumok512 = !value;
+            }
         }
 
         protected bool _isStrumok512 = false;
@@ -33,31 +33,110 @@ namespace Strumok_App.ViewModel
         public bool IsStrumok512
         {
             get => _isStrumok512;
-            set => SetProperty(ref _isStrumok512, value);
+            set
+            {
+                if (value == _isStrumok512)
+                    return;
+                SetProperty(ref _isStrumok512, value);
+                RecreateKeyConfiguration();
+            }
         }
 
-        public ulong[] Key { get; } = new ulong[16];
-
-        private void SetKeyPart(ulong keyPart, int index)
+        public ulong KeyPart1
         {
-            Key[index] = keyPart;
-            RaisePropertyChanged(nameof(Key));
+            get => keyConfiguration.GetKeyPartOrDefault(0, 0);
+            set
+            {
+                keyConfiguration.TrySetKeyPart(0, value);
+                RaisePropertyChanged();
+            }
         }
-
-        public ulong KeyPart1 { get => keyPart1; set => SetProperty(ref keyPart1, value); }
-        public ulong KeyPart2 { get => keyPart2; set => SetProperty(ref keyPart2, value); }
-        public ulong KeyPart3 { get => keyPart3; set => SetProperty(ref keyPart3, value); }
-        public ulong KeyPart4 { get => keyPart4; set => SetProperty(ref keyPart4, value); }
-        public ulong KeyPart5 { get => keyPart5; set => SetProperty(ref keyPart5, value); }
-        public ulong KeyPart6 { get => keyPart6; set => SetProperty(ref keyPart6, value); }
-        public ulong KeyPart7 { get => keyPart7; set => SetProperty(ref keyPart7, value); }
-        public ulong KeyPart8 { get => keyPart8; set => SetProperty(ref keyPart8, value); }
+        public ulong KeyPart2 {
+            get => keyConfiguration.GetKeyPartOrDefault(1, 0);
+            set
+            {
+                keyConfiguration.TrySetKeyPart(1, value);
+                RaisePropertyChanged();
+            }
+        }
+        public ulong KeyPart3 {
+            get => keyConfiguration.GetKeyPartOrDefault(2, 0);
+            set
+            {
+                keyConfiguration.TrySetKeyPart(2, value);
+                RaisePropertyChanged();
+            }
+        }
+        public ulong KeyPart4 {
+            get => keyConfiguration.GetKeyPartOrDefault(3, 0);
+            set
+            {
+                keyConfiguration.TrySetKeyPart(3, value);
+                RaisePropertyChanged();
+            }
+        }
+        public ulong KeyPart5 {
+            get => keyConfiguration.GetKeyPartOrDefault(4, 0);
+            set
+            {
+                keyConfiguration.TrySetKeyPart(4, value);
+                RaisePropertyChanged();
+            }
+        }
+        public ulong KeyPart6 {
+            get => keyConfiguration.GetKeyPartOrDefault(5, 0);
+            set
+            {
+                keyConfiguration.TrySetKeyPart(5, value);
+                RaisePropertyChanged();
+            }
+        }
+        public ulong KeyPart7 {
+            get => keyConfiguration.GetKeyPartOrDefault(6, 0);
+            set
+            {
+                keyConfiguration.TrySetKeyPart(6, value);
+                RaisePropertyChanged();
+            }
+        }
+        public ulong KeyPart8 {
+            get => keyConfiguration.GetKeyPartOrDefault(7, 0);
+            set
+            {
+                keyConfiguration.TrySetKeyPart(7, value);
+                RaisePropertyChanged();
+            }
+        }
 
         // Вектор ініціалізації
-        public ulong IVPart1 { get => iVPart1; set => SetProperty(ref iVPart1, value); }
-        public ulong IVPart2 { get => iVPart2; set => SetProperty(ref iVPart2, value); }
-        public ulong IVPart3 { get => iVPart3; set => SetProperty(ref iVPart3, value); }
-        public ulong IVPart4 { get => iVPart4; set => SetProperty(ref iVPart4, value); }
+        public ulong IVPart1 {
+            get => keyConfiguration.GetIVPartOrDefault(0, 0);
+            set {
+                keyConfiguration.TrySetIVPart(0, value);
+                RaisePropertyChanged();
+            }
+        }
+        public ulong IVPart2 {
+            get => keyConfiguration.GetIVPartOrDefault(1, 0);
+            set {
+                keyConfiguration.TrySetIVPart(1, value);
+                RaisePropertyChanged();
+            }
+        }
+        public ulong IVPart3 {
+            get => keyConfiguration.GetIVPartOrDefault(2, 0);
+            set {
+                keyConfiguration.TrySetIVPart(2, value);
+                RaisePropertyChanged();
+            }
+        }
+        public ulong IVPart4 {
+            get => keyConfiguration.GetIVPartOrDefault(3, 0);
+            set {
+                keyConfiguration.TrySetIVPart(3, value);
+                RaisePropertyChanged();
+            }
+        }
 
         // Команди
         public ICommand ApplyKeyCommand { get; }
@@ -66,13 +145,25 @@ namespace Strumok_App.ViewModel
         public ICommand SaveToFileCommand { get; }
 
         // Події
-        public event Action<ulong[], ulong[]> KeyApplied;
+        public event Action<StrumokKeyConfiguration> KeyApplied;
+
+        public event MessageDelegate MessageBroadcast;
 
         public KeyInputVm()
         {
             ApplyKeyCommand = new DelegateCommand(ApplyKey);
             RandomKeyCommand = new DelegateCommand(GenerateRandomKey);
+            LoadFromFileCommand = new DelegateCommand(LoadFromFile);
+            SaveToFileCommand = new DelegateCommand(SaveToFile);
+            RecreateKeyConfiguration();
         }
+
+        protected void RecreateKeyConfiguration()
+        {
+            keyConfiguration = new StrumokKeyConfiguration(_isStrumok512, keyConfiguration);
+            RaiseKeyConfigurationChanged();
+        }
+
         protected void GenerateRandomKey()
         {
             if (!_isStrumok256 && !_isStrumok512)
@@ -100,18 +191,54 @@ namespace Strumok_App.ViewModel
             if (!_isStrumok256 && !_isStrumok512)
                 return;
 
-            ulong[] key = _isStrumok512? new ulong[] { KeyPart1, KeyPart2, KeyPart3, KeyPart4, KeyPart5, KeyPart6, KeyPart7, KeyPart8 }
-                                       : new ulong[] { KeyPart1, KeyPart2, KeyPart3, KeyPart4 };
-
-            ulong[] iv = { IVPart1, IVPart2, IVPart3, IVPart4 };
-
-            KeyApplied?.Invoke(key, iv);
+            KeyApplied?.Invoke(keyConfiguration);
         }
         protected ulong GetRandomKeyPart()
         {
             byte[] buffer = new byte[8];
             random.NextBytes(buffer);
             return BitConverter.ToUInt64(buffer, 0);
+        }
+        protected void LoadFromFile()
+        {
+            if (keyConfiguration == null)
+                return;
+            string path = ExplorerUtils.ShowOpenFileDialog("", "JSON|*.json");
+            if (!File.Exists(path))
+                return;
+            string fileContents = File.ReadAllText(path);
+            StrumokKeyConfiguration deserialized = JsonConvert.DeserializeObject<StrumokKeyConfiguration>(fileContents);
+            if (deserialized == null)
+                return;
+            keyConfiguration = deserialized;
+            _isStrumok256 = !deserialized.Strumok512;
+            _isStrumok512 =  deserialized.Strumok512;
+            RaiseKeyConfigurationChanged();
+        }
+        protected void SaveToFile()
+        {
+            if (keyConfiguration == null)
+                return;
+            string path = ExplorerUtils.ShowSaveFileDialog("", "JSON|*.json");
+            File.WriteAllText(path, JsonConvert.SerializeObject(keyConfiguration));
+        }
+
+        protected void RaiseKeyConfigurationChanged()
+        {
+            RaisePropertyChanged(nameof(IsStrumok256));
+            RaisePropertyChanged(nameof(IsStrumok512));
+            RaisePropertyChanged(nameof(KeyPart1));
+            RaisePropertyChanged(nameof(KeyPart2));
+            RaisePropertyChanged(nameof(KeyPart3));
+            RaisePropertyChanged(nameof(KeyPart4));
+            RaisePropertyChanged(nameof(KeyPart5));
+            RaisePropertyChanged(nameof(KeyPart6));
+            RaisePropertyChanged(nameof(KeyPart7));
+            RaisePropertyChanged(nameof(KeyPart8));
+            RaisePropertyChanged(nameof(IVPart1));
+            RaisePropertyChanged(nameof(IVPart2));
+            RaisePropertyChanged(nameof(IVPart3));
+            RaisePropertyChanged(nameof(IVPart4));
         }
     }
 }

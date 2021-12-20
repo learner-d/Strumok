@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
-namespace Strumok_App.Extentions
+namespace StrumokApp.Extentions
 {
     internal class KeyInputTextBox : TextBox
     {

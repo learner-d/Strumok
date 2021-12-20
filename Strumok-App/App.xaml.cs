@@ -13,10 +13,16 @@ namespace StrumokApp
     /// </summary>
     public partial class App : Application
     {
+        static App()
+        {
+            CosturaUtility.Initialize();
+        }
         private void StrumokApp_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
             e.Handled = true;
-            MessageBoxResult mbResult = MessageBox.Show($"Збій в програмі. Рекомендовано закрити застосунок.\n{e.Exception}",
+            string exceptionString = e.Exception.ToString();
+            MessageBoxResult mbResult = MessageBox.Show($"Збій в програмі. Рекомендовано закрити застосунок.\n" +
+                $"{exceptionString.Substring(Math.Min(exceptionString.Length, 200))}",
                 "Закрити застосунок?", MessageBoxButton.YesNo, MessageBoxImage.Warning);
             if (mbResult == MessageBoxResult.Yes)
             {

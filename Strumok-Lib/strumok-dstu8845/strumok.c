@@ -682,6 +682,7 @@ struct Dstu8845Ctx_st {
     uint64_t  key[8];
     uint64_t  iv[4];
     uint8_t   key_size; // Key size in bytes
+    uint8_t   abort_operation; // Cancellation request
 };
 
 static inline void next_stream(Dstu8845Ctx *ctx, uint64_t *out_stream)
@@ -899,20 +900,6 @@ Dstu8845Ctx *dstu8845_alloc()
     return ctx;
 }
 
-/*DEPRECATED*/
-Dstu8845Ctx* dstu8845_malloc()
-{
-    Dstu8845Ctx* ctx = NULL;
-
-    ctx = malloc(sizeof(Dstu8845Ctx));
-    if (ctx == NULL) {
-        return NULL;
-    }
-    memset(ctx, 0, sizeof(Dstu8845Ctx));
-
-    return ctx;
-}
-
 int dstu8845_init(Dstu8845Ctx *ctx, const uint64_t *key, uint8_t key_size, const uint64_t *iv)
 {
     if (key_size == 32) {
@@ -1069,16 +1056,27 @@ int dstu8845_set_iv(Dstu8845Ctx *ctx, const uint64_t *iv)
     return dstu8845_init(ctx, ctx->key, ctx->key_size, iv);
 }
 
+STRUMOK_API int dstu8845_abort(Dstu8845Ctx* ctx)
+{
+    ctx->abort_operation = 1;
+    return 1;
+}
+
 int dstu8845_crypt(Dstu8845Ctx *ctx, const uint8_t *in, size_t inl, uint8_t *out)
 {
     uint8_t i;
     uint64_t keystream[16];
 
     for (; inl >= 128; inl -= 128, in += 128, out += 128) {
+        if (ctx->abort_operation)
+            return 0;
         next_stream_full_crypt(ctx, (uint64_t *)in, (uint64_t *)out);
     }
 
     if (inl > 0) {
+        if (ctx->abort_operation)
+            return 0;
+
         next_stream(ctx, keystream);
 
         for (i = 0; i < inl; i++) {
@@ -1086,7 +1084,7 @@ int dstu8845_crypt(Dstu8845Ctx *ctx, const uint8_t *in, size_t inl, uint8_t *out
         }
     }
 
-    return 1;
+    return !ctx->abort_operation;
 }
 
 void dstu8845_free(Dstu8845Ctx *ctx)

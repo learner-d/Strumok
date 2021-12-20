@@ -26,6 +26,8 @@ STRUMOK_API int dstu8845_init(Dstu8845Ctx *ctx, const uint64_t *key, uint8_t key
 
 STRUMOK_API int dstu8845_set_iv(Dstu8845Ctx *ctx, const uint64_t *iv);
 
+STRUMOK_API int dstu8845_abort(Dstu8845Ctx* ctx);
+
 STRUMOK_API int dstu8845_crypt(Dstu8845Ctx *ctx, const uint8_t *in, size_t inl, uint8_t *out);
 
 STRUMOK_API void dstu8845_free(Dstu8845Ctx *ctx);

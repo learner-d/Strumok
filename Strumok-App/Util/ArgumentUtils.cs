@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Strumok_App.Util
+namespace StrumokApp.Util
 {
     public static class ArgumentUtils
     {

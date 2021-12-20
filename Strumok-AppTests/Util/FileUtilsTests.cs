@@ -1,9 +1,9 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Strumok_App.Util;
+using StrumokApp.Util;
 using System;
 using System.IO;
 
-namespace Strumok_App.Util.Tests
+namespace StrumokApp.Util.Tests
 {
     [TestClass()]
     public class FileUtilsTests

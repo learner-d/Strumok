@@ -3,20 +3,17 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:StrumokApp"
              xmlns:bnd="clr-namespace:StrumokApp.Binding"
-             StartupUri="MainWindow.xaml"
+             StartupUri="View/MainWindow.xaml"
              DispatcherUnhandledException="StrumokApp_DispatcherUnhandledException">
     <Application.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <!--<ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.DeepPurple.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.Lime.xaml" />-->
-            </ResourceDictionary.MergedDictionaries>
             <BooleanToVisibilityConverter x:Key="boolToVisibilityConverter"/>
             <bnd:ArrULongToHexConverter x:Key="arrULArrToStrConv"/>
             <bnd:KeyPartConverter x:Key="keyPartConverter"/>
             <bnd:StrumokKeyConverter x:Key="strumokKeyConverter"/>
+            <bnd:InverseBooleanConverter x:Key="invBoolConv"/>
+            <bnd:NullToVisibillityConverter x:Key="nullToVisibilityConv"/>
+            <bnd:MessageLevelToBrushConverter x:Key="msgLvlToBrushConv"/>
         </ResourceDictionary>
     </Application.Resources>
 </Application>
